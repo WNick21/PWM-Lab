@@ -1,0 +1,39 @@
+void setup() {
+
+Serial.begin(9600);
+
+}
+
+float freq = 0; //Selected Freq
+float divisor = 0;//Select a divisor
+uint16_t oCR1A = 0; //
+uint16_t iCR1 = 0;
+float dC = 0;
+
+uint16_t FreqSetter(float freq, float divisor, float dC){
+  Serial.print(freq);
+  Serial.print("\n");
+  float period =( 1.00 / freq);
+  Serial.print(period);
+  Serial.print("\n");
+  ICR1 = uint16_t(((((period * 16000000) / divisor)) + 0.5) -1);
+  Serial.print(ICR1);
+  Serial.print("\n");
+  oCR1A = ICR1 * dC;
+  Serial.print (oCR1A);
+  Serial.print("-----\n");
+  return ICR1; 
+  
+}
+
+
+void loop() {
+
+  freq = 1000;
+  divisor = 1;
+  dC = 0.5;
+FreqSetter(freq, divisor, dC);
+delay(1000);
+
+
+}
