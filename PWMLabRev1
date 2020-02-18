@@ -1,0 +1,45 @@
+void setup() {
+TCCR1A = 0b10000010; //Set to fast PWM
+TCCR1B = 0b00011001; // Bits 3&4 select mode 14 -- bits 0,1,2 are prescalar
+ICR1 = 15999; // Sets freq
+OCR1A = 7999; //Duty Cycle
+DDRB |= 0b00000010; //
+}
+
+int Speed = 7999;
+
+
+void speedControl(int Speed){
+int x = 1;
+while (x == 1){
+  OCR1A = Speed;
+  delay(1000);
+  OCR1A = 0;
+  delay(1000);
+  OCR1A = Speed * 0.5;
+    delay(1000);
+   OCR1A = 0;
+  delay(1000);
+
+  OCR1A = Speed * 0.25;
+  delay(500);
+}
+
+
+}
+
+
+void loop() {
+//speedControl(Speed);
+  OCR1A = Speed;
+  delay(1000);
+  OCR1A = 0;
+  delay(1000);
+  OCR1A = Speed * 0.5;
+    delay(1000);
+   OCR1A = 0;
+  delay(1000);
+
+  OCR1A = Speed * 0.25;
+  delay(500);
+}
