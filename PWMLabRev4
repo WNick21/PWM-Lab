@@ -1,0 +1,128 @@
+void setup() {
+TCCR1A = 0b10000010; //Set to fast PWM
+TCCR1B = 0b00011001; // Bits 3&4 select mode 14 -- bits 0,1,2 are prescalar
+ICR1 = 15999; // Sets freq
+OCR1A = 7999; //Duty Cycle
+DDRB |= 0b00000010; //
+Serial.begin(9600);
+}
+
+int Speed = 15999;
+
+uint16_t Period = 4000; // desired period in milliseconds
+uint16_t Divisor; //Divisor required for given Period
+uint8_t DivMask = 0b11111000;
+
+void periodBehavior(uint16_t Period){
+
+  TCCR1B &= DivMask; // Clears divisor
+ 
+ 
+  if (Period >= 1048){
+    Divisor = 1024;         //div of1024
+    TCCR1B |= 0b00000101;      
+  }
+ 
+  else if ((Period < 1048) && (Period > 262.144)){
+    Divisor = 256;
+    TCCR1B |= 0b00000100;    
+  }
+ 
+  else if ((Period < 262) && (Period > 32.768)){
+    Divisor = 64;
+    TCCR1B |= 0b00000011;
+  }    
+ 
+  else if ((Period < 32)&&(Period > 4.096)){
+    Divisor = 8;
+    TCCR1B |= 0b00000010;
+  }
+ 
+  else {
+    Divisor = 1;
+    TCCR1B |= 0b00000001;
+  }
+ 
+  ICR1 = uint16_t ((((Period *16000000)/ Divisor)+.5)-1);
+  Serial.print(Divisor);
+  Serial.print("\n");
+  
+  OCR1A = ((ICR1 + 1)*.5)-1;      //duty cycle of 50%
+  return;
+
+}
+
+int DutyCycle(int Speed, int newSpeed){
+  
+  newSpeed = Speed;
+  OCR1A = newSpeed;
+  delay(1000);
+
+  newSpeed = Speed * .9;
+   OCR1A = newSpeed;
+  delay(1000);
+  
+  newSpeed = Speed * .8;
+   OCR1A = newSpeed;
+  delay(1000);
+  
+  newSpeed = Speed * .7;
+   OCR1A = newSpeed;
+  delay(1000);
+  
+  newSpeed = Speed * .6;
+   OCR1A = newSpeed;
+  delay(1000);
+  
+  newSpeed = Speed * .5;
+   OCR1A = newSpeed;
+  delay(1000);
+  
+  newSpeed = Speed * .4;
+   OCR1A = newSpeed;
+  delay(1000);
+  
+  newSpeed = Speed * .3;
+   OCR1A = newSpeed;
+  delay(1000);
+  
+  newSpeed = Speed * .2;
+   OCR1A = newSpeed;
+  delay(1000);
+  
+  newSpeed = Speed * .1;
+   OCR1A = newSpeed;
+  delay(1000);
+
+  newSpeed = 0;
+  OCR1A = newSpeed;
+  delay(1000);
+}
+
+
+
+
+
+void loop() {
+  for(int i = 0; i<4; i++){
+    if (i == 0){
+      Period = 10;
+    }
+  else if (i == 1){
+    Period = 100;
+  }
+  else if (i == 2){
+    Period = 1000;
+    
+  }
+  else if (i == 3){
+    Period = 2000;
+  }
+  periodBehavior(Period);
+  delay(5000);
+  }
+//  for(int i = 0; i<10; i++){
+//  //DutyCycle(Speed, OCR1A);
+//
+//  }
+}
